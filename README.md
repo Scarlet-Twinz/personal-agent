@@ -1,164 +1,115 @@
-<img src="./public/banner.png" width="100%" alt="Personal Agent Template" />
+# Personal Agent
 
-# Personal Agent Template
+A full-stack personal AI assistant project based on a durable agent architecture. The repository combines a Nuxt web application with an Eve agent runtime, authentication, persistent memory, and optional integrations across multiple communication and productivity surfaces.
 
-[![CI](https://img.shields.io/github/actions/workflow/status/vercel-labs/personal-agent-template/ci.yml?branch=main&color=black)](https://github.com/vercel-labs/personal-agent-template/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/github/license/vercel-labs/personal-agent-template?color=black)](https://github.com/vercel-labs/personal-agent-template/blob/main/LICENSE)
-[![Vercel](https://img.shields.io/badge/Vercel-black?logo=vercel&logoColor=white)](https://vercel.com)
+> **Project note:** This repository is based on the open-source Personal Agent Template and remains a template/customization project rather than an original AI model or hosted production service.
 
-**Template.** Fork it, customize it, and deploy your own personal agent.
+## What It Does
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Fpersonal-agent-template&env=BETTER_AUTH_SECRET,BETTER_AUTH_URL,INTERNAL_API_SECRET&envDescription=BETTER_AUTH_SECRET%3A%20run%20openssl%20rand%20-base64%2032%20%7C%20BETTER_AUTH_URL%3A%20your%20production%20URL%20%7C%20INTERNAL_API_SECRET%3A%20shared%20secret%20for%20web%20%2B%20eve&envLink=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Fpersonal-agent-template%2Fblob%2Fmain%2Fdocs%2FENVIRONMENT.md&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22tursocloud%22%2C%22productSlug%22%3A%22database%22%2C%22protocol%22%3A%22storage%22%7D%5D&project-name=personal-agent&repository-name=personal-agent)
+- Provides a web chat interface for interacting with a personal AI assistant.
+- Maintains durable conversations and user context across sessions.
+- Supports long-term memory with user approval before memory is saved.
+- Includes channel support for web chat, Slack, and iMessage through the project's integration layer.
+- Provides GitHub and Linear integrations when their connections are configured.
+- Includes a daily-summary workflow built around saved context and connected work items.
+- Uses an Eve agent runtime with configurable instructions, tools, skills, and channels.
 
-Open source personal agent template. Web chat, Slack, iMessage, GitHub, Linear, and long-term memory — one codebase, durable sessions, user-approved memory saves.
+## Architecture
 
-## Features
-
-### Web Chat — Threads That Persist
-
-Chat with your agent in the browser. Threads resume across sessions, tool calls render in real time, and `save_memory` proposals require explicit approval before anything is stored.
-
-### Slack — Same Agent, Different Surface
-
-DMs and @mentions on Slack. Link your Slack account to your web profile so memory and context follow you across channels.
-
-### iMessage — Text Your Agent
-
-Reach V over iMessage via [Sendblue](https://chat-sdk.dev/adapters/vendor-official/sendblue). Add your phone number in **Profile**, then message the Sendblue line — same memory and context as web and Slack.
-
-### GitHub — Repos, PRs, and CI
-
-Connect GitHub via Vercel Connect. Ask about repositories, pull requests, issues, and workflows — the agent uses [@github-tools/sdk](https://github-tools.com/frameworks/eve) tools with durable approval on writes.
-
-### Linear — Issues On Demand
-
-Connect Linear via Vercel Connect MCP. Ask about issues, projects, and cycles — the agent queries Linear tools, never guesses from memory.
-
-### Long-Term Memory — Import and Grow
-
-Raycast-style import from ChatGPT or other assistants. Five fixed categories, one prose block each. Edit, delete, or let the agent propose updates via `save_memory`.
-
-### Daily Summary — On Demand
-
-Morning briefing skill: active focus from memory, assigned Linear issues, and a suggested next action. Trigger from the home quick action or ask in chat.
-
-## [Architecture](./docs/ARCHITECTURE.md)
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│              Web chat · Slack DMs / mentions · iMessage           │
-└───────────────────────────────┬─────────────────────────────────┘
-                                ▼
-┌─────────────────────────────────────────────────────────────────┐
-│              Eve agent (channels, tools, skills)                 │
-└───────────────────────────────┬─────────────────────────────────┘
-                                │ /api/internal/* (Bearer auth)
-                                ▼
-┌─────────────────────────────────────────────────────────────────┐
-│         Nuxt (UI + Nitro API + Better Auth + SQLite)           │
-└───────────────────────────────┬─────────────────────────────────┘
-                                ▼
-                      Vercel Connect (Linear, Slack)
+```text
+Web / Slack / iMessage
+        |
+        v
+   Eve Agent Runtime
+        |
+        v
+ Nuxt 4 + Nitro API
+        |
+        +--> Better Auth
+        +--> SQLite / NuxtHub
+        +--> Long-term Memory
+        +--> Connected Services
 ```
 
-On Vercel, two services deploy from [`vercel.json`](vercel.json): `web` (Nuxt) and `eve` (agent runtime).
+The agent's runtime instructions are dynamically assembled from the base instructions and, when available, the authenticated user's stored context. The default agent configuration uses Claude Sonnet through the AI provider configured by the project.
 
-## Quick Start
+## Tech Stack
 
-### Deploy to Vercel
+- TypeScript
+- Nuxt 4 / Vue 3
+- Eve agent framework
+- Vercel AI SDK
+- Better Auth
+- Drizzle ORM
+- SQLite / NuxtHub
+- Tailwind CSS / Nuxt UI
+- GitHub tools integration
+- Linear integration
+- Sendblue adapter for iMessage
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Fpersonal-agent-template&env=BETTER_AUTH_SECRET,BETTER_AUTH_URL,INTERNAL_API_SECRET&envDescription=BETTER_AUTH_SECRET%3A%20run%20openssl%20rand%20-base64%2032%20%7C%20BETTER_AUTH_URL%3A%20your%20production%20URL%20%7C%20INTERNAL_API_SECRET%3A%20shared%20secret%20for%20web%20%2B%20eve&envLink=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Fpersonal-agent-template%2Fblob%2Fmain%2Fdocs%2FENVIRONMENT.md&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22tursocloud%22%2C%22productSlug%22%3A%22database%22%2C%22protocol%22%3A%22storage%22%7D%5D&project-name=personal-agent&repository-name=personal-agent)
+## Project Structure
 
-### Self-hosting
+```text
+personal-agent/
+├── agent/          # Agent definition, instructions, channels, tools, and skills
+├── app/            # Nuxt application UI
+├── server/         # Nitro server routes and application backend
+├── shared/         # Shared agent configuration and types
+├── docs/           # Architecture and environment documentation
+├── public/         # Static assets
+└── package.json    # Project scripts and dependencies
+```
 
-**Requirements:** Node.js 24+, pnpm
+## Local Development
+
+### Requirements
+
+- Node.js 24+
+- pnpm 9+
+
+### Setup
 
 ```bash
-git clone https://github.com/vercel-labs/personal-agent-template.git
-cd personal-agent-template
-
+git clone https://github.com/Scarlet-Twinz/personal-agent.git
+cd personal-agent
 pnpm install
 cp .env.example .env
 pnpm db:migrate
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000), create an account, and start chatting.
+Then open `http://localhost:3000`.
 
-**Required environment variables:**
+### Environment
 
-```bash
-BETTER_AUTH_SECRET=...       # openssl rand -base64 32
-BETTER_AUTH_URL=http://localhost:3000
-INTERNAL_API_SECRET=...      # openssl rand -base64 32 — same on web + eve
-```
+The application expects environment configuration for authentication and internal service communication. Keep secrets in `.env` and never commit them to the repository.
 
-See [ENVIRONMENT.md](./docs/ENVIRONMENT.md) for the full reference.
-
-Fresh local database:
+## Development Commands
 
 ```bash
-rm -rf .data/db && pnpm db:migrate
+pnpm dev
+pnpm typecheck
+pnpm build
+pnpm db:generate
+pnpm db:migrate
 ```
 
-## Customization
+## Current Status
 
-Personal Agent Template ships with **V** as the example persona. See the [Customization Guide](./docs/CUSTOMIZATION.md) for how to:
+This repository is best presented as an **AI agent engineering / full-stack integration project**. Its value is in the architecture around durable sessions, memory, authentication, tool use, and multi-channel interaction—not in claiming a custom foundation model.
 
-- Rename your agent (name, slug, persona)
-- Change the AI model
-- Add tools and skills
-- Configure Slack, iMessage, and Linear integrations
-- Theme the UI
-- Deploy your fork
+The project is currently configured around the template's example agent persona and integrations. Additional production deployment configuration should be treated as environment-specific rather than assumed from the repository alone.
 
-## Memory
+## Attribution
 
-Long-term memory is injected into every Eve session for authenticated users (web, linked Slack, and iMessage).
+The project is based on the open-source Personal Agent Template from Vercel Labs. The original template and its upstream documentation should be credited when distributing or presenting derivative work.
 
-1. Open **Profile → Import Memory**
-2. Copy the export prompt into ChatGPT, Claude, etc.
-3. Paste the response → **Add to Memory**
-4. Start a **new chat** so the agent picks up the latest context
+## Author
 
-V can also propose facts via **`save_memory`** — approve or skip in chat. Edit or delete entries on **Profile → Memory**.
+**Anthony Emmanuella Mmasinachi**
 
-## How It Works
-
-> For the full technical deep-dive, see [Architecture](./docs/ARCHITECTURE.md).
-
-1. **Auth**: Users sign in via Better Auth (email/password)
-2. **Session start**: Eve fetches profile + memory and injects into agent instructions
-3. **Chat**: Web UI streams through Eve; Slack events hit the slack channel; iMessage via Sendblue
-4. **Tools**: Agent calls weather, save_memory, Linear MCP as needed
-5. **Internal API**: Agent reads/writes memory, Slack links, and phone links via authenticated Nitro routes
-
-## Development
-
-```bash
-pnpm dev          # Nuxt + Eve (eve/nuxt module — see Eve docs)
-pnpm typecheck    # TypeScript check
-pnpm build        # Production build
-pnpm db:generate  # Generate Drizzle migrations
-pnpm db:migrate   # Apply migrations
-```
-
-See [AGENTS.md](./AGENTS.md) for notes aimed at AI coding assistants.
-
-## Built With
-
-- [Eve](https://eve.dev) — Durable agent framework
-- [Nuxt](https://nuxt.com) — Full-stack Vue framework
-- [Nuxt UI](https://ui.nuxt.com) — UI component library
-- [NuxtHub](https://hub.nuxt.com) — SQLite database
-- [Better Auth](https://www.better-auth.com) — Authentication
-- [Drizzle ORM](https://orm.drizzle.team) — Type-safe database queries
-- [Vercel Connect](https://vercel.com/docs/connect) — Linear and Slack integrations
-
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to get involved.
+GitHub: [@Scarlet-Twinz](https://github.com/Scarlet-Twinz)
 
 ## License
 
-[MIT](./LICENSE)
+MIT
