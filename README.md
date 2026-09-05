@@ -4,6 +4,10 @@ A full-stack personal AI assistant project based on a durable agent architecture
 
 > **Project note:** This repository is based on the open-source Personal Agent Template and remains a template/customization project rather than an original AI model or hosted production service.
 
+## Product Preview
+
+A conceptual view of the assistant as a personal AI workspace: a focused chat interface backed by persistent context, memory, authentication, agent tools, and optional external integrations. The presentation emphasizes **durable conversations, contextual assistance, tool use, and multi-channel agent interaction** rather than a standalone chatbot UI.
+
 ## What It Does
 
 - Provides a web chat interface for interacting with a personal AI assistant.
