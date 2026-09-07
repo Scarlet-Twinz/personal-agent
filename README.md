@@ -112,7 +112,7 @@ The project is based on the open-source Personal Agent Template from Vercel Labs
 
 **Anthony Emmanuella Mmasinachi**
 
-GitHub: [@Scarlet-Twinz](https://github.com/Scarlet-Twinz)
+**GitHub Repository:** https://github.com/Scarlet-Twinz/personal-agent
 
 ## License
 
