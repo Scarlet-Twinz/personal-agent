@@ -1,4 +1,4 @@
-# Personal Agent
+#  Personal Agent
 
 A full-stack personal AI assistant project based on a durable agent architecture. The repository combines a Nuxt web application with an Eve agent runtime, authentication, persistent memory, and optional integrations across multiple communication and productivity surfaces.
 
