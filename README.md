@@ -114,6 +114,9 @@ The project is based on the open-source Personal Agent Template from Vercel Labs
 
 **GitHub Repository:** https://github.com/Scarlet-Twinz/personal-agent
 
+
 ## License
 
-MIT
+MIT License.
+
+See [LICENSE](LICENSE) for the full license text.
